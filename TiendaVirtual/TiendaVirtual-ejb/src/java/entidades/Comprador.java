@@ -5,10 +5,17 @@
  */
 package entidades;
 
+import java.util.List;
+import javax.persistence.Entity;
+import javax.persistence.OneToMany;
+
 /**
  *
  * @author Estudiante
  */
-public class Comprador {
-    
+@Entity
+public class Comprador extends Persona {
+    @OneToMany(mappedBy="comprador")
+    private List<Orden> ordenes;
+    private int cantidadCompras;
 }
