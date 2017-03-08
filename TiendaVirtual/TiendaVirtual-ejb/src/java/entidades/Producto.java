@@ -30,7 +30,7 @@ public class Producto {
     @ManyToOne(optional=false)
     private Vendedor vendedor;
     @ManyToMany
-    private List<Categoria> categoria;
+    private List<Categoria> categorias;
     @ManyToOne
     private Orden orden;
 }
