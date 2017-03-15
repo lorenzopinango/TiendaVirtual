@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -36,7 +37,7 @@ public class Producto implements Serializable {
     @Column(name = "FECHA_CREACION")
     private Date fechaCreacion;
     private long precio;
-    @ManyToOne(optional=false)
+    @ManyToOne(optional=false, fetch = FetchType.LAZY)
     @JoinColumn(name = "ID_VENDEDOR",nullable = false)
     private Vendedor vendedor;
     @ManyToMany

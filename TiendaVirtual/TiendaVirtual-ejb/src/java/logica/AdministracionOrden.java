@@ -8,8 +8,13 @@ package logica;
 import entidades.Comprador;
 import entidades.InformacionEnvio;
 import entidades.InformacionFactura;
+import entidades.Orden;
 import entidades.Producto;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import javax.ejb.EJB;
+import javax.ejb.Remove;
 import javax.ejb.Stateful;
 
 /**
@@ -19,34 +24,61 @@ import javax.ejb.Stateful;
 @Stateful
 public class AdministracionOrden implements AdministracionOrdenLocal {
     
+    private List<Producto> productos;
+    private Comprador comprador;
+    private InformacionFactura informacionFactura;
+    private InformacionEnvio informacionEnvio;
+    
+    @EJB
+    AdministracionPersistenciaLocal administracionPersistencia;
+    
+    public AdministracionOrden() {
+        productos = new ArrayList<Producto>();
+    }
+    
     @Override
     public void adicionarComprador(Comprador comprador) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        this.comprador = comprador;
     }
 
     @Override
     public void adicionarInformacionFactura(InformacionFactura informacionFactura) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        this.informacionFactura = informacionFactura;
     }
 
     @Override
     public void adicionarInformacionEnvio(InformacionEnvio informacionEnvio) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        this.informacionEnvio = informacionEnvio;
     }
 
     @Override
+    @Remove
     public Integer crearOrdenCompra() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        informacionEnvio.setId(administracionPersistencia.crearInformacionEnvio(informacionEnvio));
+        informacionFactura.setId(administracionPersistencia.crearInformacionFactura(informacionFactura));
+        
+        Orden orden = new Orden();
+        orden.setComprador(comprador);
+        orden.setFecha(new Date());
+        orden.setInformacionEnvio(informacionEnvio);
+        orden.setInformacionFactura(informacionFactura);
+        
+        orden.setId(administracionPersistencia.crearOrden(orden));
+        
+        administracionPersistencia.modificarProductos(productos, orden);
+        
+        return orden.getId();
     }
 
     @Override
+    @Remove
     public void cancelarOrdenCompra() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public void adicionarProducto(Producto producto) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        productos.add(producto);
     }
 
     @Override
