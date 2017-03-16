@@ -5,6 +5,7 @@
  */
 package logica;
 
+import auditoria.CreacionOrdenInterceptor;
 import entidades.Comprador;
 import entidades.InformacionEnvio;
 import entidades.InformacionFactura;
@@ -16,6 +17,7 @@ import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Remove;
 import javax.ejb.Stateful;
+import javax.interceptor.Interceptors;
 
 /**
  *
@@ -30,7 +32,7 @@ public class AdministracionOrden implements AdministracionOrdenLocal {
     private InformacionEnvio informacionEnvio;
     
     @EJB
-    AdministracionPersistenciaLocal administracionPersistencia;
+    AdministracionPersistenciaJPALocal administracionPersistencia;
     
     public AdministracionOrden() {
         productos = new ArrayList<Producto>();
@@ -53,9 +55,12 @@ public class AdministracionOrden implements AdministracionOrdenLocal {
 
     @Override
     @Remove
+    @Interceptors(CreacionOrdenInterceptor.class)
     public Integer crearOrdenCompra() {
-        informacionEnvio.setId(administracionPersistencia.crearInformacionEnvio(informacionEnvio));
-        informacionFactura.setId(administracionPersistencia.crearInformacionFactura(informacionFactura));
+        /*informacionEnvio.setId(administracionPersistencia.crearInformacionEnvio(informacionEnvio));
+        informacionFactura.setId(administracionPersistencia.crearInformacionFactura(informacionFactura));*/
+        administracionPersistencia.crearInformacionEnvio(informacionEnvio);
+        administracionPersistencia.crearInformacionFactura(informacionFactura);
         
         Orden orden = new Orden();
         orden.setComprador(comprador);
@@ -63,8 +68,11 @@ public class AdministracionOrden implements AdministracionOrdenLocal {
         orden.setInformacionEnvio(informacionEnvio);
         orden.setInformacionFactura(informacionFactura);
         
-        orden.setId(administracionPersistencia.crearOrden(orden));
+        /*orden.setId(administracionPersistencia.crearOrden(orden));
         
+        administracionPersistencia.modificarProductos(productos, orden);*/
+        
+        administracionPersistencia.crearOrden(orden);
         administracionPersistencia.modificarProductos(productos, orden);
         
         return orden.getId();
@@ -83,7 +91,7 @@ public class AdministracionOrden implements AdministracionOrdenLocal {
 
     @Override
     public Comprador getComprador() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return comprador;
     }
 
     @Override

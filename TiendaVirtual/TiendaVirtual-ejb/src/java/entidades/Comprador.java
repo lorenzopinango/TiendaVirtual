@@ -8,6 +8,8 @@ package entidades;
 import java.util.List;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 
 /**
@@ -16,6 +18,9 @@ import javax.persistence.OneToMany;
  */
 @Entity
 @DiscriminatorValue(value = "C")
+@NamedQueries({
+@NamedQuery(name="findAllCompradores",query="SELECT c FROM Comprador c")
+})
 public class Comprador extends Persona {
     @OneToMany(mappedBy="comprador")
     private List<Orden> ordenes;

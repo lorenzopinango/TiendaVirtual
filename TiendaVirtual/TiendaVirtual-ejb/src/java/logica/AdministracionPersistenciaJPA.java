@@ -15,6 +15,7 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 /**
  *
@@ -51,8 +52,7 @@ public class AdministracionPersistenciaJPA implements AdministracionPersistencia
 
     @Override
     public void modificarProductos(List<Producto> productos, Orden orden) {
-        for (int i = 0; i < productos.size(); i ++){
-            Producto producto = new Producto();
+        for (Producto producto: productos) {
             producto.setOrden(orden);
             em.merge(producto);
         }
@@ -65,17 +65,22 @@ public class AdministracionPersistenciaJPA implements AdministracionPersistencia
 
     @Override
     public List<Producto> consultarProductos() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Query query = em.createNamedQuery("findAllProducts");
+        List<Producto> productos = query.getResultList();
+        return productos;
     }
 
     @Override
     public Integer crearBitacora(Bitacora bitacora) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        em.persist(bitacora);
+        return bitacora.getId();
     }
 
     @Override
     public List<Comprador> consultarCompradores() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Query query = em.createNamedQuery("findAllCompradores");
+        List<Comprador> compradores = query.getResultList();
+        return compradores;
     }
 
     

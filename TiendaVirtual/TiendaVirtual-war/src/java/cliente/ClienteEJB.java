@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import logica.AdministracionOrdenLocal;
+import logica.AdministracionPersistenciaJPALocal;
 import logica.AdministracionPersistenciaLocal;
 
 /**
@@ -27,7 +28,8 @@ import logica.AdministracionPersistenciaLocal;
 public class ClienteEJB extends HttpServlet {
 
     @EJB
-    AdministracionPersistenciaLocal administracionPersistencia;
+    AdministracionPersistenciaJPALocal administracionPersistencia;
+    //AdministracionPersistenciaLocal administracionPersistencia;
     @EJB
     AdministracionOrdenLocal administracionOrden;
     
@@ -55,7 +57,7 @@ public class ClienteEJB extends HttpServlet {
             out.println("</body>");
             out.println("</html>");
             
-            Producto producto = administracionPersistencia.consultarProducto(1);
+            /*Producto producto = administracionPersistencia.consultarProducto(1);
             administracionOrden.adicionarProducto(producto);
             producto = new Producto();
             producto = administracionPersistencia.consultarProducto(2);
@@ -63,6 +65,30 @@ public class ClienteEJB extends HttpServlet {
 
             Comprador comprador = new Comprador();
             comprador.setLogin("maria");
+            administracionOrden.adicionarComprador(comprador);
+
+            InformacionEnvio informacionEnvio = new InformacionEnvio();
+            informacionEnvio.setCiudad("BOGOTA");
+            informacionEnvio.setDepartamento("CUNDINAMARCA");
+            informacionEnvio.setPais("COLOMBIA");
+            informacionEnvio.setDireccion("CR50 N30-22");
+            administracionOrden.adicionarInformacionEnvio(informacionEnvio);
+
+            InformacionFactura informacionFactura = new InformacionFactura();
+            informacionFactura.setCodigoTarjeta("0001");
+            informacionFactura.setFechaExpiracion(new Date());
+            informacionFactura.setNumeroTarjeta("123456789");
+            administracionOrden.adicionarInformacionFactura(informacionFactura);
+
+            administracionOrden.crearOrdenCompra();*/
+            
+            Producto producto = administracionPersistencia.consultarProducto(1);
+            administracionOrden.adicionarProducto(producto);
+            producto = new Producto();
+            producto = administracionPersistencia.consultarProducto(2);
+            administracionOrden.adicionarProducto(producto);
+
+            Comprador comprador = administracionPersistencia.consultarComprador("maria");
             administracionOrden.adicionarComprador(comprador);
 
             InformacionEnvio informacionEnvio = new InformacionEnvio();
@@ -123,3 +149,4 @@ public class ClienteEJB extends HttpServlet {
     }// </editor-fold>
 
 }
+
