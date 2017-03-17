@@ -12,7 +12,11 @@ import entidades.InformacionFactura;
 import entidades.Orden;
 import entidades.Producto;
 import java.util.List;
+import javax.annotation.Resource;
 import javax.ejb.Stateless;
+import javax.ejb.Timeout;
+import javax.ejb.Timer;
+import javax.ejb.TimerService;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
@@ -27,6 +31,9 @@ public class AdministracionPersistenciaJPA implements AdministracionPersistencia
     @PersistenceContext
     EntityManager em;
     
+    @Resource
+    private TimerService timerService;
+    
     @Override
     public Producto consultarProducto(int idProducto) {
         return em.find(Producto.class, idProducto);
@@ -35,6 +42,7 @@ public class AdministracionPersistenciaJPA implements AdministracionPersistencia
     @Override
     public Integer crearOrden(Orden orden) {
         em.persist(orden);
+        timerService.createTimer(15000, orden);
         return orden.getId();
     }
 
@@ -83,5 +91,10 @@ public class AdministracionPersistenciaJPA implements AdministracionPersistencia
         return compradores;
     }
 
-    
+    @Timeout
+    private void timerCrearOrden(Timer timer){
+        Orden orden = (Orden) timer.getInfo();
+        System.out.println("Se ha enviado la orden a la dirección "
+        + orden.getInformacionEnvio().getDireccion());
+    }
 }
