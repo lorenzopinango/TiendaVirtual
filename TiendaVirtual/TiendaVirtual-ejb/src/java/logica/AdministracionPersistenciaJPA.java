@@ -17,9 +17,11 @@ import javax.ejb.Stateless;
 import javax.ejb.Timeout;
 import javax.ejb.Timer;
 import javax.ejb.TimerService;
+import javax.interceptor.Interceptors;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import notificaciones.NotificacionInterceptor;
 
 /**
  *
@@ -40,6 +42,7 @@ public class AdministracionPersistenciaJPA implements AdministracionPersistencia
     }
 
     @Override
+    @Interceptors(NotificacionInterceptor.class)
     public Integer crearOrden(Orden orden) {
         em.persist(orden);
         timerService.createTimer(15000, orden);
