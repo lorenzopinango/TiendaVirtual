@@ -5,6 +5,7 @@
  */
 package notificaciones;
 
+import entidades.Orden;
 import javax.annotation.Resource;
 import javax.inject.Inject;
 import javax.interceptor.AroundInvoke;
@@ -12,6 +13,8 @@ import javax.interceptor.InvocationContext;
 import javax.jms.Destination;
 import javax.jms.JMSConnectionFactory;
 import javax.jms.JMSContext;
+import javax.jms.JMSProducer;
+import javax.jms.ObjectMessage;
 
 /**
  *
@@ -28,7 +31,14 @@ public class NotificacionInterceptor {
     
     @AroundInvoke
     public Object notificarCreacionOrden(InvocationContext ic) throws Exception{
+        Object[] object = ic.getParameters();
+        Orden orden = (Orden) object[0];
         
+        ObjectMessage message = context.createObjectMessage();
+        message.setObject(orden);
+        
+        JMSProducer producer = context.createProducer();
+        producer.send(destination, message);
         
         return ic.proceed();
     }

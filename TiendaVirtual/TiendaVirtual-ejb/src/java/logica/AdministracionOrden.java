@@ -11,12 +11,18 @@ import entidades.InformacionEnvio;
 import entidades.InformacionFactura;
 import entidades.Orden;
 import entidades.Producto;
+import excepciones.CreacionOrdenException;
+import excepciones.ModificacionProductoException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Remove;
 import javax.ejb.Stateful;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
+import javax.ejb.TransactionManagement;
+import javax.ejb.TransactionManagementType;
 import javax.interceptor.Interceptors;
 
 /**
@@ -24,6 +30,9 @@ import javax.interceptor.Interceptors;
  * @author Estudiante
  */
 @Stateful
+@TransactionManagement(TransactionManagementType.CONTAINER)
+//Para solo manejar transaccionalidad donde se defina
+@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
 public class AdministracionOrden implements AdministracionOrdenLocal {
     
     private List<Producto> productos;
@@ -56,7 +65,8 @@ public class AdministracionOrden implements AdministracionOrdenLocal {
     @Override
     @Remove
     @Interceptors(CreacionOrdenInterceptor.class)
-    public Integer crearOrdenCompra() {
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public Integer crearOrdenCompra() throws CreacionOrdenException, ModificacionProductoException{
         /*informacionEnvio.setId(administracionPersistencia.crearInformacionEnvio(informacionEnvio));
         informacionFactura.setId(administracionPersistencia.crearInformacionFactura(informacionFactura));*/
         administracionPersistencia.crearInformacionEnvio(informacionEnvio);
