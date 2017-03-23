@@ -9,9 +9,13 @@ import entidades.Comprador;
 import entidades.InformacionEnvio;
 import entidades.InformacionFactura;
 import entidades.Producto;
+import excepciones.CreacionOrdenException;
+import excepciones.ModificacionProductoException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -104,7 +108,13 @@ public class ClienteEJB extends HttpServlet {
             informacionFactura.setNumeroTarjeta("123456789");
             administracionOrden.adicionarInformacionFactura(informacionFactura);
 
-            administracionOrden.crearOrdenCompra();
+            try {
+                administracionOrden.crearOrdenCompra();
+            } catch (CreacionOrdenException ex) {
+                System.out.println("Ocurrió un error al crear la orden de compra.");
+            } catch (ModificacionProductoException ex) {
+                System.out.println("Ocurrió un error al modificar los productos de la orden de compra.");
+            }
 
         }
     }

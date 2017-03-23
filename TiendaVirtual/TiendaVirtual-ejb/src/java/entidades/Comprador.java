@@ -11,6 +11,9 @@ import javax.persistence.Entity;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -21,7 +24,9 @@ import javax.persistence.OneToMany;
 @NamedQueries({
 @NamedQuery(name="findAllCompradores",query="SELECT c FROM Comprador c")
 })
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Comprador extends Persona {
+    @XmlTransient
     @OneToMany(mappedBy="comprador")
     private List<Orden> ordenes;
     private int cantidadCompras;

@@ -5,10 +5,13 @@
  */
 package excepciones;
 
+import javax.ejb.ApplicationException;
+
 /**
  *
  * @author Estudiante
  */
+@ApplicationException(rollback=true)
 public class ModificacionProductoException extends Exception {
     
 }

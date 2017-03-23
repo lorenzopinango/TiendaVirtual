@@ -84,6 +84,7 @@ public class AdministracionPersistenciaJPA implements AdministracionPersistencia
                 producto.setOrden(orden);
                 em.merge(producto);
             }
+            //throw new ModificacionProductoException();//Se realiza la excepcion para probar rollback
         } catch (Exception ex) {
            throw new ModificacionProductoException();
         }

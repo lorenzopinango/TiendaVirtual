@@ -18,12 +18,16 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
  * @author Estudiante
  */
 @Entity
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Orden implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)//Para crear la secuencia autoincremental
@@ -31,6 +35,7 @@ public class Orden implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date fecha;
     @OneToMany(mappedBy="orden")
+    @XmlTransient
     private List<Producto> productos;
     @ManyToOne(optional=false)
     @JoinColumn(name = "ID_COMPRADOR")
