@@ -1,0 +1,27 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+        <ui:param name="titulo" value="Adición de productos" /><!-- Modifica el valor de la variable titulo del template -->
+        <ui:composition template="./template.xhtml">
+            <ui:define name="body">
+                <h:form id="adicionarProductos">
+                    <h:outputLabel value="Comprador" />
+                    <h:selectOneMenu valueChangeListener="#{ordenCompradorBean.compradoresListener}">
+                        <f:selectItem noSelectionOption="true" itemLabel="Seleccione una opción" />
+                        <f:selectItems value="#{ordenCompraBean.compradores}" var="comprador"
+                                itemValue="#{comprador.login}"
+                                itemLabel="#{comprador.nombre1.concat('').concat(comprador.nombre2).
+                                        concat('').concat(comprador.apellido1).concat('').
+                                        concat(comprador.apellido2)}"
+                    </h:selectOneMenu>
+                </h:form>
+            </ui:define>
+        </ui:composition>
+
+    </body>
+</html>
