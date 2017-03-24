@@ -66,6 +66,7 @@ public class AdministracionPersistenciaJPA implements AdministracionPersistencia
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public Integer crearInformacionEnvio(InformacionEnvio ie) {
         em.persist(ie);
+        em.flush();
         return ie.getId();
     }
 
@@ -73,6 +74,7 @@ public class AdministracionPersistenciaJPA implements AdministracionPersistencia
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public Integer crearInformacionFactura(InformacionFactura infFac) {
         em.persist(infFac);
+        em.flush();
         return infFac.getId();
     }
 
