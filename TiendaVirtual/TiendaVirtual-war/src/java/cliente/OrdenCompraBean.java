@@ -6,11 +6,17 @@
 package cliente;
 
 import entidades.Comprador;
+import entidades.InformacionEnvio;
+import entidades.InformacionFactura;
+import entidades.Producto;
+import excepciones.CreacionOrdenException;
+import excepciones.ModificacionProductoException;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
 import java.util.List;
 import javax.ejb.EJB;
+import javax.faces.context.FacesContext;
 import javax.faces.event.ValueChangeEvent;
 import logica.AdministracionOrdenLocal;
 import logica.AdministracionPersistenciaJPALocal;
@@ -29,10 +35,32 @@ public class OrdenCompraBean implements Serializable {
     @EJB
     AdministracionOrdenLocal administracionOrden;
     
+    private InformacionEnvio informacionEnvio;
+    
+    private InformacionFactura informacionFactura;
+
+    public InformacionFactura getInformacionFactura() {
+        return informacionFactura;
+    }
+
+    public void setInformacionFactura(InformacionFactura informacionFactura) {
+        this.informacionFactura = informacionFactura;
+    }
+    
     /**
      * Creates a new instance of OrdenCompraBean
      */
     public OrdenCompraBean() {
+        informacionEnvio = new InformacionEnvio();
+        informacionFactura = new InformacionFactura();
+    }
+
+    public void setInformacionEnvio(InformacionEnvio informacionEnvio) {
+        this.informacionEnvio = informacionEnvio;
+    }
+
+    public InformacionEnvio getInformacionEnvio() {
+        return informacionEnvio;
     }
     
     public List<Comprador> getCompradores(){
@@ -45,5 +73,36 @@ public class OrdenCompraBean implements Serializable {
             Comprador comprador = administracionPersistencia.consultarComprador(login);
             administracionOrden.adicionarComprador(comprador);
         }
+    }
+    
+    public List getProductos() {
+        return administracionPersistencia.consultarProductos();
+    }
+    
+    public void adicionarProducto(String id){
+        Producto producto = administracionPersistencia.consultarProducto(Integer.parseInt(id));
+        administracionOrden.adicionarProducto(producto);
+    }
+    
+    public List getCarroCompras(){
+       return administracionOrden.consultarCarroCompras();
+    }
+    
+    public String adicionarInformacionEnvio(){
+        administracionOrden.adicionarInformacionEnvio(informacionEnvio);
+        return "informacion_factura";
+    }
+    
+    public void crearOrdenCompra(){
+        administracionOrden.adicionarInformacionFactura(informacionFactura);
+        try{
+            administracionOrden.crearOrdenCompra();
+        } catch (CreacionOrdenException ex) {
+            System.out.println("Error en creación de orden");
+        } catch (ModificacionProductoException ex) {
+            System.out.println("Error en modificación de productos");
+        }
+        
+        FacesContext.getCurrentInstance().getExternalContext().getSessionMap().remove("OrdenCompraBean");
     }
 }

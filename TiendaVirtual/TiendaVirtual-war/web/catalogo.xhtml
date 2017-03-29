@@ -6,19 +6,78 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core">
 
     <body>
-        <ui:param name="titulo" value="Adición de productos" /><!-- Modifica el valor de la variable titulo del template -->
         <ui:composition template="./template.xhtml">
+            <ui:param name="titulo" value="Adición de productos" /><!-- Modifica el valor de la variable titulo del template -->
             <ui:define name="body">
                 <h:form id="adicionarProductos">
                     <h:outputLabel value="Comprador" />
-                    <h:selectOneMenu valueChangeListener="#{ordenCompradorBean.compradoresListener}">
+                    <h:selectOneMenu valueChangeListener="#{ordenCompraBean.compradoresListener}">
                         <f:selectItem noSelectionOption="true" itemLabel="Seleccione una opción" />
                         <f:selectItems value="#{ordenCompraBean.compradores}" var="comprador"
                                 itemValue="#{comprador.login}"
-                                itemLabel="#{comprador.nombre1.concat('').concat(comprador.nombre2).
-                                        concat('').concat(comprador.apellido1).concat('').
-                                        concat(comprador.apellido2)}"
+                                itemLabel="#{comprador.nombre1.concat(' ').concat(comprador.nombre2).
+                                        concat(' ').concat(comprador.apellido1).concat(' ').
+                                        concat(comprador.apellido2)}"/>
                     </h:selectOneMenu>
+                    <h:panelGrid>
+                        <f:facet name="header">
+                            <h:outputText value="Productos" />
+                        </f:facet>
+                        
+                        <h:dataTable id="tblProductos" value="#{ordenCompraBean.productos}" border="1" width="700" var="producto">
+                            <h:column>
+                                <h:commandLink value="Adicionar"
+                                               action="#{ordenCompraBean.adicionarProducto(producto.id)}">
+                                    <f:ajax event="action" render=":adicionarProductos:tblCarroCompras"/>
+                                </h:commandLink>
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">
+                                    <h:outputText value="NOMBRE" />
+                                </f:facet>
+                                <h:outputText value="#{producto.nombre}" />
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">
+                                    <h:outputText value="PRECIO" />
+                                </f:facet>
+                                <h:outputText value="#{producto.precio}" >
+                                    <f:convertNumber pattern="$####"/>
+                                </h:outputText>
+                            </h:column>
+                        </h:dataTable>
+                    </h:panelGrid>
+                    
+                    <h:panelGrid>
+                        <f:facet name="header">
+                            <h:outputText value="Productos" />
+                        </f:facet>
+                        
+                        <h:dataTable id="tblCarroCompras" value="#{ordenCompraBean.carroCompras}" border="1" width="700" var="producto">
+                            <h:column>
+                                <f:facet name="header">
+                                    <h:outputText value="ID" />
+                                </f:facet>
+                                <h:outputText value="#{producto.id}" />
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">
+                                    <h:outputText value="NOMBRE" />
+                                </f:facet>
+                                <h:outputText value="#{producto.nombre}" />
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">
+                                    <h:outputText value="PRECIO" />
+                                </f:facet>
+                                <h:outputText value="#{producto.precio}" >
+                                    <f:convertNumber pattern="$####"/>
+                                </h:outputText>
+                            </h:column>
+                        </h:dataTable>
+                    </h:panelGrid>
+                    
+                    <h:commandButton value="Siguiente" action="informacion_envio"/>
                 </h:form>
             </ui:define>
         </ui:composition>
