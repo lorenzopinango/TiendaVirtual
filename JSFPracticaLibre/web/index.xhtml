@@ -8,9 +8,8 @@
         <title>Práctica Libre</title>
     </h:head>
     <h:body>
-        <h:form>
+        <h:form id="form">
             <p:panel id="panel" header="Registrar Persona">
-                <p:messages id="msgs" />
                 <h:panelGrid columns="3" cellpadding="5">
                     <p:outputLabel value="Nombre: " for="nombre"/>
                     <p:inputText id="nombre" value="#{administracionPersonaBean.persona.nombre}"
@@ -44,64 +43,68 @@
                     <p:message for="fechaNacimiento"/>
                 </h:panelGrid>
                 <p:commandButton value="Agregar" update="panel" action="#{administracionPersonaBean.agregarPersona}" icon="ui-icon-check" />
+                <br/><br/>
+                <p:growl id="msgs" showDetail="true"/>
+                <p:dataTable id="tblPersonas" var="persona" value="#{administracionPersonaBean.personas}" editable="true" style="margin-bottom:20px">
+                    <f:facet name="header">
+                        Lista de personas
+                    </f:facet>
+
+                    <p:ajax event="rowEdit" listener="#{administracionPersonaBean.onRowEdit}" update=":form:msgs" />
+                    <p:ajax event="rowEditCancel" listener="#{administracionPersonaBean.onRowCancel}" update=":form:msgs" />
+
+                    <p:column headerText="Id">
+                        <p:cellEditor>
+                            <f:facet name="output"><h:outputText value="#{persona.id}" /></f:facet>
+                            <f:facet name="input"><p:inputText id="modelInput" value="#{persona.id}" style="width:100%" readonly="true"/></f:facet>
+                        </p:cellEditor>
+                    </p:column>
+
+                    <p:column headerText="Nombre">
+                        <p:cellEditor>
+                            <f:facet name="output"><h:outputText value="#{persona.nombre}" /></f:facet>
+                            <f:facet name="input"><p:inputText value="#{persona.nombre}" style="width:100%" label="Nombre"/></f:facet>
+                        </p:cellEditor>
+                    </p:column>
+
+                    <p:column headerText="Edad">
+                        <p:cellEditor>
+                            <f:facet name="output"><h:outputText value="#{persona.edad}" /></f:facet>
+                            <f:facet name="input"><p:inputText value="#{persona.edad}" style="width:100%" label="Edad"/></f:facet>
+                        </p:cellEditor>
+                    </p:column>
+
+                    <p:column headerText="Sexo">
+                        <p:cellEditor>
+                            <f:facet name="output"><h:outputText value="#{persona.sexo}" /></f:facet>
+                            <f:facet name="input">
+                                <p:selectOneMenu value="#{persona.sexo}" style="width:100%">
+                                    <f:selectItem itemLabel="Femenino" itemValue="Femenino" />
+                                    <f:selectItem itemLabel="Masculino" itemValue="Masculino" />
+                                </p:selectOneMenu>
+                            </f:facet>
+                        </p:cellEditor>
+                    </p:column>
+
+                     <p:column headerText="Fecha de nacimiento">
+                        <p:cellEditor>
+                            <f:facet name="output"><h:outputText value="#{persona.fechaNacimiento}"><f:convertDateTime pattern="MM/dd/yyyy" /></h:outputText></f:facet>
+                            <f:facet name="input"><p:calendar id="fechaNacimiento" value="#{persona.fechaNacimiento}" 
+                                    label="Fecha de nacimiento"/></f:facet>
+                        </p:cellEditor>
+                    </p:column>
+
+                    <p:column style="width:32px">
+                        <p:rowEditor />
+                    </p:column>
+                    <p:column style="width:70px">
+                        <h:commandLink value="Eliminar"
+                                    action="#{administracionPersonaBean.eliminarPersona(persona)}">
+                            <f:ajax event="action" render=":form:tblPersonas"/>
+                        </h:commandLink>
+                    </p:column>
+                </p:dataTable>
             </p:panel>
-        </h:form>
-        
-        <h:form id="form">
-            <p:growl id="msgs" showDetail="true"/>
-            <p:dataTable id="tblPersonas" var="persona" value="#{administracionPersonaBean.personas}" editable="true" style="margin-bottom:20px">
-                <f:facet name="header">
-                    Lista de personas
-                </f:facet>
-
-                <p:ajax event="rowEdit" listener="#{dtEditView.onRowEdit}" update=":form:msgs" />
-                <p:ajax event="rowEditCancel" listener="#{dtEditView.onRowCancel}" update=":form:msgs" />
-
-                <p:column headerText="Id">
-                    <p:cellEditor>
-                        <f:facet name="output"><h:outputText value="#{persona.id}" /></f:facet>
-                        <f:facet name="input"><p:inputText id="modelInput" value="#{persona.id}" style="width:100%"/></f:facet>
-                    </p:cellEditor>
-                </p:column>
-
-                <p:column headerText="Nombre">
-                    <p:cellEditor>
-                        <f:facet name="output"><h:outputText value="#{persona.nombre}" /></f:facet>
-                        <f:facet name="input"><p:inputText value="#{persona.nombre}" style="width:100%" label="Nombre"/></f:facet>
-                    </p:cellEditor>
-                </p:column>
-
-                <p:column headerText="Edad">
-                    <p:cellEditor>
-                        <f:facet name="output"><h:outputText value="#{persona.edad}" /></f:facet>
-                        <f:facet name="input"><p:inputText value="#{persona.edad}" style="width:100%" label="Edad"/></f:facet>
-                    </p:cellEditor>
-                </p:column>
-
-                <p:column headerText="Sexo">
-                    <p:cellEditor>
-                        <f:facet name="output"><h:outputText value="#{persona.sexo}" /></f:facet>
-                        <f:facet name="input">
-                            <p:selectOneMenu value="#{persona.sexo}" style="width:100%">
-                                <f:selectItem itemLabel="Femenino" itemValue="Femenino" />
-                                <f:selectItem itemLabel="Masculino" itemValue="Masculino" />
-                            </p:selectOneMenu>
-                        </f:facet>
-                    </p:cellEditor>
-                </p:column>
-                
-                 <p:column headerText="Fecha de nacimiento">
-                    <p:cellEditor>
-                        <f:facet name="output"><h:outputText value="#{persona.fechaNacimiento}"><f:convertDateTime pattern="MM/dd/yyyy" /></h:outputText></f:facet>
-                        <f:facet name="input"><p:calendar id="fechaNacimiento" value="#{persona.fechaNacimiento}" 
-                                label="Fecha de nacimiento"/></f:facet>
-                    </p:cellEditor>
-                </p:column>
-
-                <p:column style="width:32px">
-                    <p:rowEditor />
-                </p:column>
-            </p:dataTable>
         </h:form>
     </h:body>
 </html>
