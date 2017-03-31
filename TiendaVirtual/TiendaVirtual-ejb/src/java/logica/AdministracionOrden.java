@@ -16,6 +16,7 @@ import excepciones.ModificacionProductoException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Remove;
 import javax.ejb.Stateful;
@@ -48,21 +49,25 @@ public class AdministracionOrden implements AdministracionOrdenLocal {
     }
     
     @Override
+    @RolesAllowed({"comprador"})
     public void adicionarComprador(Comprador comprador) {
         this.comprador = comprador;
     }
 
     @Override
+    @RolesAllowed({"comprador"})
     public void adicionarInformacionFactura(InformacionFactura informacionFactura) {
         this.informacionFactura = informacionFactura;
     }
 
     @Override
+    @RolesAllowed({"comprador"})
     public void adicionarInformacionEnvio(InformacionEnvio informacionEnvio) {
         this.informacionEnvio = informacionEnvio;
     }
 
     @Override
+    @RolesAllowed({"comprador"})
     @Remove
     @Interceptors(CreacionOrdenInterceptor.class)
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
@@ -89,22 +94,26 @@ public class AdministracionOrden implements AdministracionOrdenLocal {
     }
 
     @Override
+    @RolesAllowed({"comprador"})
     @Remove
     public void cancelarOrdenCompra() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
+    @RolesAllowed({"comprador"})
     public void adicionarProducto(Producto producto) {
         productos.add(producto);
     }
 
     @Override
+    @RolesAllowed({"comprador", "vendedor"})
     public Comprador getComprador() {
         return comprador;
     }
 
     @Override
+    @RolesAllowed({"comprador", "vendedor"})
     public List consultarCarroCompras() {
         return productos;
     }
